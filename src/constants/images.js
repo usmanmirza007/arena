@@ -8,6 +8,9 @@ const images = {
   email: require('../assets/images/email.png'),
   men: require('../assets/images/man.png'),
   drawer_icon: require('../assets/images/drawer_icon.png'),
+  location: require('../assets/images/location.png'),
+  logout: require('../assets/images/logout.png'),
+  lock: require('../assets/images/lock.png'),
 
 };
 export default images;

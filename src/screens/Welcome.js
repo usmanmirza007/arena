@@ -28,7 +28,7 @@ export default function Welcome() {
         <Text style={styles.heading1}>Create Account</Text>
         <Text style={styles.info}>Join us for fun, fast-paced tinnis clinics for all range of player</Text>
         <View style={{ flexGrow: 1, justifyContent: 'flex-end', marginBottom: 20 }}>
-          <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.push("CreateAccount")}>
+          <TouchableOpacity style={[{ marginHorizontal: 25 }, styles.loginBtn]} onPress={() => navigation.push("CreateAccount")}>
             <Text style={styles.loginText}>Create Account</Text>
           </TouchableOpacity>
           <Text style={styles.or}>Already Member?</Text>
