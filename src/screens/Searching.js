@@ -6,11 +6,11 @@ import { useNavigation } from '@react-navigation/native';
 import images from '../constants/images'
 import styles from './../constants/styles';
 import Ican from 'react-native-vector-icons/AntDesign';
-
+import SpinnerScreen from './../components/SpinnerScreen'
 const Searching = () => {
 
   const navigation = useNavigation();
-
+  const [loading, setLoading] = useState(true)
   return (
     <View style={{ flex: 1, backgroundColor: '#151314' }}>
       <StatusBar
@@ -39,9 +39,10 @@ const Searching = () => {
             fontSize: 13,
             color: '#fff'
           }}>
-          lahore
+          Albuquerque
               </Text>
       </View>
+      {loading? <SpinnerScreen/> : null}
       <View style={{ marginBottom: 40, flexGrow: 1, justifyContent: 'flex-end' }}>
 
         <View style={{ flexDirection: 'row', marginHorizontal: 25, justifyContent: 'space-between' }}>

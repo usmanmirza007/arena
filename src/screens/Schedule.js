@@ -5,12 +5,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from '@react-navigation/native';
 import images from '../constants/images'
 import CheckBox1 from '@react-native-community/checkbox';
-
+import TimePicker from './../components/TimePicker'
 const Schedule = () => {
 
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const navigation = useNavigation();
-
+  const [time, setTimee] = useState(new Date())
+  const setTime = (time) => {
+    setTimee(time)
+  };
   return (
     <View style={{ flex: 1, backgroundColor: '#151314' }}>
       <StatusBar
@@ -39,9 +42,9 @@ const Schedule = () => {
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>TuesDay</Text>
-        <TouchableOpacity>
-          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>None</Text>
-        </TouchableOpacity>
+        <TimePicker
+          updateTime={setTime}
+          editTime={time} />
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Wednesday</Text>

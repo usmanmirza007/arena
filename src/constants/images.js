@@ -11,6 +11,7 @@ const images = {
   location: require('../assets/images/location.png'),
   logout: require('../assets/images/logout.png'),
   lock: require('../assets/images/lock.png'),
+  marker: require('../assets/images/marker.png'),
 
 };
 export default images;

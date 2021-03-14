@@ -30,7 +30,7 @@ export default StyleSheet.create({
     fontSize: 11
   },
   loginBtn: {
-    backgroundColor: "#2A2A2A",
+    backgroundColor: "#DD2831",
     borderRadius: 25,
     height: 50,
     alignItems: "center",

@@ -7,9 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from './../screens/Context';
 import images from '../constants/images';
 import styles from './../constants/styles';
+import auth from '@react-native-firebase/auth';
 
 const HomeScreen = () => {
-
+  const user = auth().currentUser
   const navigation = useNavigation();
   const context = React.useContext(AuthContext);
 
@@ -44,7 +45,7 @@ const HomeScreen = () => {
               </View>
             </View>
           </View>
-          <Text style={styles.heading1}>Katie Bouler</Text>
+          <Text style={styles.heading1}>{user.displayName}</Text>
           <Text style={styles.info}>Tell us about yourself?</Text>
           <View style={{ marginTop: 100 }}>
             <TouchableOpacity style={[styles.loginBtn, { backgroundColor: '#DD2831' }]} onPress={() => { navigation.navigate('Map')  }}>
