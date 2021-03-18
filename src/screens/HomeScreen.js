@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, Image, TextInput, ImageBackground, StatusBar } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
@@ -8,12 +8,27 @@ import { AuthContext } from './../screens/Context';
 import images from '../constants/images';
 import styles from './../constants/styles';
 import auth from '@react-native-firebase/auth';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-community/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const user = auth().currentUser
+  const [googleUser, setGoogleUser] = useState(null)
   const navigation = useNavigation();
   const context = React.useContext(AuthContext);
 
+  useEffect( () => {
+    getCurrentUser()
+  }, [])
+
+  const getCurrentUser = async () => {
+    const currentUser = await GoogleSignin.getCurrentUser();
+    setGoogleUser(currentUser)
+  };
   return (
     <View style={{ flex: 1, backgroundColor: '#231F20' }}>
       <StatusBar
@@ -45,10 +60,10 @@ const HomeScreen = () => {
               </View>
             </View>
           </View>
-          <Text style={styles.heading1}>{user.displayName}</Text>
+          {!googleUser ? <Text style={styles.heading1}>{user?.displayName}</Text> : <Text style={styles.heading1}>{googleUser?.user.name}</Text>}
           <Text style={styles.info}>Tell us about yourself?</Text>
           <View style={{ marginTop: 100 }}>
-            <TouchableOpacity style={[styles.loginBtn, { backgroundColor: '#DD2831' }]} onPress={() => { navigation.navigate('Map')  }}>
+            <TouchableOpacity style={[styles.loginBtn, { backgroundColor: '#DD2831' }]} onPress={() => { navigation.navigate('Map') }}>
               <Text style={styles.loginText}>Find Match</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{
@@ -60,7 +75,7 @@ const HomeScreen = () => {
               justifyContent: "center",
               marginTop: 10,
               marginBottom: 10,
-            }} onPress={() => {}}>
+            }} onPress={() => { }}>
               <Text style={styles.loginText}>Match History</Text>
             </TouchableOpacity>
           </View>

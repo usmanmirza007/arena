@@ -23,7 +23,7 @@ const TimePicker = ({updateTime, editTime}) => {
     const currentTime = selectedDate || time;
     setShow(Platform.OS === 'ios');
     setTime(currentTime);
-    updateTime(currentTime);
+    // updateTime(currentTime);
     
   };
 
@@ -56,7 +56,10 @@ const TimePicker = ({updateTime, editTime}) => {
                 marginLeft: 20,
                 color: '#fff'
               }}>
-              {editTime ? moment(editTime, 'h:mm a').format('h:mm a') : moment(time).format('h:mm a')}
+              {
+              // editTime ? moment(editTime, 'h:mm a').format('h:mm a') : 
+              moment(time).format('h:mm a')
+              }
             </Text>
           </TouchableOpacity>
       </View>

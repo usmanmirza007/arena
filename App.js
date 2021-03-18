@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Image, View,Alert, ToastAndroid } from "react-native";
+import { Image, View, Alert, ToastAndroid } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -14,6 +14,14 @@ import Constants from './src/constants/index';
 import Map from './src/screens/Map'
 import Schedule from './src/screens/Schedule'
 import Searching from './src/screens/Searching'
+import ListUser from './src/screens/ListUser'
+import AcceptMatch from './src/screens/AcceptMatch'
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-community/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
@@ -44,7 +52,7 @@ const AuthStack = () => (
 
 const HomeStack = () => (
   <Stack.Navigator initialRouteName="HomeScreen" headerMode='none' >
-   
+
     <Stack.Screen
       name="HomeScreen"
       component={HomeScreen}
@@ -69,6 +77,20 @@ const HomeStack = () => (
     <Stack.Screen
       name="Searching"
       component={Searching}
+      options={{
+        animationEnabled: false
+      }}
+    />
+    <Stack.Screen
+      name="ListUser"
+      component={ListUser}
+      options={{
+        animationEnabled: false
+      }}
+    />
+    <Stack.Screen
+      name="AcceptMatch"
+      component={AcceptMatch}
       options={{
         animationEnabled: false
       }}
@@ -103,9 +125,20 @@ export default () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(false);
   const [confirm, setConfirm] = React.useState(null);
+  const [googleUser, setGoogleUser] = React.useState(null)
 
+  useEffect(() => {
+    getCurrentUser()
+  }, [])
+
+  const getCurrentUser = async () => {
+    const currentUser = await GoogleSignin.getCurrentUser();
+    setGoogleUser(currentUser)
+  };
+  console.log('name', googleUser?.user.name);
   const updateUserStatus = () => {
-    if (auth().currentUser && auth().currentUser.email && auth().currentUser.displayName) {
+    console.log('user');
+    if ((auth().currentUser && auth().currentUser.email && auth().currentUser.displayName) || (googleUser?.user.name && googleUser?.user.email)) {
       setUserToken(true)
     } else if (!auth().currentUser) {
       if (!Constants.DUMMY_AUTH) {
@@ -125,30 +158,8 @@ export default () => {
 
   const authContext = React.useMemo(() => {
     return {
-      // sendOtp: async (phoneNumber, callback) => {
-      //   if (Constants.DUMMY_AUTH) {
-      //     callback();
-      //   } else {
-      //     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-      //     setConfirm(confirmation);
-      //     callback();
-      //   }
 
-      // },
-      // confirmCode: async (code) => {
-      //   try {
-      //     if (Constants.DUMMY_AUTH) {
-      //       setUserToken(true)
-      //     } else {
-      //       await confirm.confirm(code);
-      //     }
-
-      //   } catch (error) {
-      //     ToastAndroid.show("Please sign up first", ToastAndroid.SHORT);
-      //     throw new Error("Invalid code.")
-      //   }
-      // },
-      doCreateUser: async (email, password, callback) => {
+      createUser: async (email, password, callback) => {
         try {
           let response = await auth().createUserWithEmailAndPassword(
             email,
@@ -178,6 +189,16 @@ export default () => {
         }
         updateUserStatus();
       },
+      loginWithGoogle: async (name) => {
+        try {
+          // if (name) {
+            updateUserStatus()
+            // setUserToken(true)
+          // }
+        } catch (error) {
+        }
+        setUserToken(true)
+      },
       setEmailPassword: async (email, password) => {
         try {
           await auth().currentUser.updateEmail(email);
@@ -205,11 +226,13 @@ export default () => {
         setIsLoading(false);
         setUserToken("asdf");
       },
-      signOut: () => {
+      signOut: async () => {
         if (Constants.DUMMY_AUTH) {
           setIsLoading(false);
           setUserToken(null);
-        } else {
+        } 
+        else if (auth().currentUser) {
+          console.log('firebase');
           auth()
             .signOut().then(() => {
               ToastAndroid.show("Sign Out", ToastAndroid.SHORT);
@@ -219,6 +242,21 @@ export default () => {
             .catch((err) => {
               ToastAndroid.show("Sign Out Failed", ToastAndroid.SHORT);
             })
+        } 
+        else {
+            try {
+              // const token = await AsyncStorage.getItem('Token');
+              console.log('google');
+              await GoogleSignin.revokeAccess();
+              await GoogleSignin.signOut();
+              setIsLoading(false);
+              setUserToken(null);
+              setGoogleUser([])
+              // updateUserStatus()
+            } catch (error) {
+              console.error('Error',error);
+            }
+          // };
         }
 
       }
@@ -236,6 +274,6 @@ export default () => {
       <NavigationContainer>
         <RootStack userToken={userToken} />
       </NavigationContainer>
-     </AuthContext.Provider>
+    </AuthContext.Provider>
   );
 };

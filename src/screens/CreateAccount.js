@@ -29,20 +29,12 @@ export default function CreateAccount() {
   const [customerLocationAddress, setCustomerLocationAddress] = useState(null)
   const context = React.useContext(AuthContext);
   const navigation = useNavigation();
+  
   function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
-  function validatePhone(phone) {
-    const regex = /^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/
-    return regex.test(phone);
-  }
 
-  function validatePassword(password) {
-    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
-    var pass = regex.test(password)
-    return pass
-  }
 
   useEffect(() => {
     RNLocation.configure({
@@ -212,7 +204,7 @@ export default function CreateAccount() {
                 console.log("Sending OTP");
                 try {
                   setLoading(true)
-                  context.doCreateUser(emailAddress.trim(), password, () => {
+                  context.createUser(emailAddress.trim(), password, () => {
                     context.setEmailPassword(emailAddress, password);
                     context.setProfileInfo(fullName);
                     setLoading(false)

@@ -36,45 +36,52 @@ const Schedule = () => {
 
       <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Monday</Text>
-        <TouchableOpacity>
-          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>2pm-5pm</Text>
-        </TouchableOpacity>
+        <TimePicker
+          // updateTime={setTime}
+          // editTime={time} 
+          />
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>TuesDay</Text>
         <TimePicker
-          updateTime={setTime}
-          editTime={time} />
+          // updateTime={setTime}
+          // editTime={time} 
+          />
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Wednesday</Text>
-        <TouchableOpacity>
-          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>3pm-6pm</Text>
-        </TouchableOpacity>
+        <TimePicker
+          // updateTime={setTime}
+          // editTime={time} 
+          />
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Thursday</Text>
-        <TouchableOpacity>
-          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>None</Text>
-        </TouchableOpacity>
+        <TimePicker
+          // updateTime={setTime}
+          // editTime={time} 
+          />
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Friday</Text>
-        <TouchableOpacity>
-          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>None</Text>
-        </TouchableOpacity>
+        <TimePicker
+          // updateTime={setTime}
+          // editTime={time} 
+          />
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Saturday</Text>
-        <TouchableOpacity>
-          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>6pm-8pm</Text>
-        </TouchableOpacity>
+        <TimePicker
+          // updateTime={setTime}
+          // editTime={time} 
+          />
       </View>
       <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 65 }}>
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Sunday</Text>
-        <TouchableOpacity>
-          <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>None</Text>
-        </TouchableOpacity>
+        <TimePicker
+          // updateTime={setTime}
+          // editTime={time} 
+          />
       </View>
       <View
         style={{
@@ -111,7 +118,7 @@ const Schedule = () => {
         position: 'absolute',
         zIndex: 111,
         backgroundColor: '#DD2831'
-      }} onPress={() => { navigation.navigate('Searching') }}>
+      }} onPress={() => { navigation.navigate('ListUser') }}>
         <Text style={{
           color: "white",
           alignSelf: 'center',

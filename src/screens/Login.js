@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, ToastAndroid, StatusBar, View, Image, ActivityIndicator, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
 import { AuthContext } from './Context';
 import { useNavigation } from '@react-navigation/native';
 import SpinnerScreen from './../components/SpinnerScreen'
 import { ScrollView } from 'react-native-gesture-handler';
 import images from '../constants/images';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-community/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { configure } from 'react-native-location';
 
 export default function Login() {
-  const [phoneNumber, setPhoneNumber] = useState('');
+
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
@@ -15,11 +22,63 @@ export default function Login() {
   const navigation = useNavigation();
   const context = React.useContext(AuthContext);
 
-  function validateNumber(phoneNumber) {
-    // const regex = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/
-    const regex = /^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$/
-    return regex.test(phoneNumber)
-  }
+ useEffect(() => {
+  GoogleSignin.configure({
+    // webClientId:'396576685172-sr2t59upe0sll96ugmnnqkqr6vabvu2d.apps.googleusercontent.com',
+    androidClientId: '396576685172-sr2t59upe0sll96ugmnnqkqr6vabvu2d.apps.googleusercontent.com',
+    scopes: ['profile', 'email'],
+    // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+    // webClientId: '999697635442-kbe7rblrigie09a05mctkurh9p4knj55.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    // offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+    // hostedDomain: '', // specifies a hosted domain restriction
+    // androidCliendId: '999697635442-kbe7rblrigie09a05mctkurh9p4knj55.apps.googleusercontent.com',
+    // loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
+    forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+    // accountName: '', // [Android] specifies an account name on the device that should be used
+    // iosClientId: '<FROM DEVELOPER CONSOLE>', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  });
+ }, [])
+
+  const googleSignIn = async () => {
+    try {
+      console.log("login");
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const accessToken = await GoogleSignin.getTokens();
+      // const currentUser = await GoogleSignin.getCurrentUser();
+      console.log("info", userInfo, accessToken);
+      const name = userInfo.user.name
+      const email = userInfo.user.email
+      const image = userInfo.user.photo
+      // this.setState({
+      //     // userGoogleInfo: userInfo,
+      //     gName: name,
+      //     gEmail: email,
+      //     gPhoto: image,
+      //     loaded: true
+      // });
+      // {this.props.navigation.navigate('tab', {NAME: this.state.gName, IMAGE: this.state.gPhoto})}
+      // context.loginWithGoogle()
+      context.loginWithGoogle(name, async () => {
+        await AsyncStorage.setItem('Token', accessToken);
+        setLoading(false)
+      })
+      // navigation.navigate('CreateAccount')
+    } catch (error) {
+      // console.log("err",error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('user cancelled the login flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('operation (e.g. sign in) is in progress already');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('play services not available or outdated');
+      } else {
+        console.log('some other error happened');
+      }
+    }
+  };
+
+
   function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
@@ -66,7 +125,7 @@ export default function Login() {
                 placeholder="Email..."
                 placeholderTextColor={'#4C4C4C'}
                 value={email}
-              keyboardType={'email-address'}
+                keyboardType={'email-address'}
                 onChangeText={setEmail}
               />
             </View>
@@ -130,32 +189,32 @@ export default function Login() {
             <Text style={styles.forgot}>Forgot Password?</Text>
           </TouchableOpacity>
           {!loading ? <TouchableOpacity style={styles.loginBtn} onPress={() => {
-              if (!validateEmail(email)) {
-                ToastAndroid.show("Invalid Email Address", ToastAndroid.SHORT);
-              } else if (password.length < 6) {
-                ToastAndroid.show("Invalid password", ToastAndroid.SHORT);
-              } else {
-                try {
-                  setLoading(true)
-                  context.loginWithEmailPassword(email.trim(), password, () => {
-                    setLoading(false)
-                  }, (err) => {
-                    ToastAndroid.show("Please sign up first", ToastAndroid.SHORT);
-                    setLoading(false)
-
-                  });
-                } catch (error) {
-                  ToastAndroid.show(error.message, ToastAndroid.SHORT);
+            if (!validateEmail(email)) {
+              ToastAndroid.show("Invalid Email Address", ToastAndroid.SHORT);
+            } else if (password.length < 6) {
+              ToastAndroid.show("Invalid password", ToastAndroid.SHORT);
+            } else {
+              try {
+                setLoading(true)
+                context.loginWithEmailPassword(email.trim(), password, () => {
                   setLoading(false)
-                }
+                }, (err) => {
+                  ToastAndroid.show("Please sign up first", ToastAndroid.SHORT);
+                  setLoading(false)
+
+                });
+              } catch (error) {
+                ToastAndroid.show(error.message, ToastAndroid.SHORT);
+                setLoading(false)
               }
+            }
           }}
           >
             <Text style={styles.loginText}>LOGIN</Text>
           </TouchableOpacity>
             : <SpinnerScreen />}
           <Text style={{ color: '#fff', marginBottom: 0, fontSize: 13, marginTop: 10, alignSelf: 'center' }}>Or continue with</Text>
-          <TouchableOpacity style={{
+          {/* <TouchableOpacity style={{
             borderColor: '#0E1EF1',
             borderWidth: 1,
             borderRadius: 25,
@@ -166,8 +225,8 @@ export default function Login() {
             marginBottom: 10,
           }} onPress={() => { }}>
             <Text style={styles.loginText}>Facebook</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity style={{
             borderColor: '#EE5E07',
             borderWidth: 1,
             borderRadius: 25,
@@ -178,7 +237,15 @@ export default function Login() {
             marginBottom: 10,
           }} onPress={() => { }}>
             <Text style={styles.loginText}>Google</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          {/* <View style={{ alignItems: 'center' }}>
+            <GoogleSigninButton
+              style={{ width: 192, height: 48 }}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={googleSignIn}
+            />
+          </View> */}
           <TouchableOpacity onPress={() => { navigation.navigate('CreateAccount') }}>
             <Text style={styles.loginText}>Don’t have any account?Sign Up</Text>
           </TouchableOpacity>

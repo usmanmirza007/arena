@@ -123,6 +123,42 @@ const Map = () => {
           latitudeDelta: 0.001,
           longitudeDelta: 0.001
         }} pinColor={'red'} />
+        <Marker coordinate={{
+          latitude: 35.18398397139959,
+          longitude: -106.7309452083244,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+        }} pinColor={'red'} />
+        <Marker coordinate={{
+          latitude: 35.06785051122086,
+          longitude: -106.63016878140456,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+        }} pinColor={'red'} />
+        <Marker coordinate={{
+          latitude: 35.19400591297762, 
+          longitude: -106.66719235932383,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+        }} pinColor={'red'} />
+        <Marker coordinate={{
+          latitude: 35.1399837850149, 
+          longitude: -106.49074809813195,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+        }} pinColor={'red'} />
+        <Marker coordinate={{
+          latitude: 35.15898611351953,  
+          longitude: -106.69805764250519,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+        }} pinColor={'red'} />
+        <Marker coordinate={{
+          latitude: 35.14389671895946,
+          longitude: -106.5511276918249,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001
+        }} pinColor={'red'} />
        
       </MapView>
       <TouchableOpacity style={{
