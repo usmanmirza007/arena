@@ -59,7 +59,7 @@ class MyRequest extends React.Component {
       />
       {this.state.loading ? <ActivityIndicator size='large' color='#fff' /> :
       <ScrollView>
-      <Text style={{color: '#fff', fontSize: 20,alignSelf: 'center', marginTop: 20}}>My Request</Text>
+      <Text style={{color: '#fff', fontSize: 20,alignSelf: 'center', marginTop: 20}}>Match Location</Text>
         {this.state.data.map((item, index) => {
           console.log('item', this.state.data);
           return (

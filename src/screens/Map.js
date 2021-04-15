@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from "react";
-import { Text, TouchableOpacity, View, Image, StatusBar, ActivityIndicator } from "react-native";
+import { Text, TouchableOpacity,StyleSheet, View, Image,Modal,ImageBackground, StatusBar, ActivityIndicator } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
 import Geolocation from 'react-native-geolocation-service';
@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import images from './../constants/images'
 import { Marker } from "react-native-maps";
+import UserModal from './../components/UserModal'
 // import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 
@@ -19,6 +20,8 @@ class Map extends Component {
       currentRegion: '',
       grantPermission: false,
       loading: true,
+      modalRef: React.createRef(),
+
       marker: [{
         latitude: 35.108737220411875,
         longitude: -106.56891682029273,
@@ -164,30 +167,21 @@ class Map extends Component {
           barStyle="light-content"
           backgroundColor="#000"
         />
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#E61A4F', height: 100, position: 'absolute', top: 0, zIndex: 111, width: '100%', borderBottomRightRadius: 60 }}>
-          <TouchableOpacity style={{ backgroundColor: '#AA163A', width: 50, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center', marginLeft: 20, marginTop: 20 }}
-            onPress={()=>{
-              this.props.navigation.navigate('MyRequest')
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#E61A4F', height: 100, position: 'absolute', top: 0, zIndex: 111, width: '100%', borderBottomRightRadius: 60 }}>
+          <TouchableOpacity style={{ marginLeft: 20, marginTop: 20 }}
+            onPress={() => {
+              this.state.modalRef.current.getAlert();
             }}
           >
             <Image
-              source={images.drawer_icon}
+              source={require('./../assets/images/dots.png')}
               resizeMode={'contain'}
-              style={{ width: 30, height: 30, tintColor: '#fff', }}
+              style={{ width: 40, height: 40, tintColor: '#fff', }}
             />
+              <UserModal ref={this.state.modalRef} />
+
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ backgroundColor: '#AA163A', width: 50, height: 45, borderRadius: 5, alignItems: 'center', justifyContent: 'center', marginRight: 20, marginTop: 20 }}
-            onPress={()=>{
-              this.props.navigation.navigate('AcceptMatch')
-            }}
-          >
-            <Image
-              source={images.drawer_icon}
-              resizeMode={'contain'}
-              style={{ width: 30, height: 30, tintColor: '#fff', }}
-            />
-          </TouchableOpacity>
         </View>
         {/* mapview */}
         {loading ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -263,3 +257,15 @@ class Map extends Component {
 }
 
 export default Map;
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    marginBottom: 75
+  },
+  modalView: {
+    backgroundColor: "black",
+    width: '100%',
+    height: '100%'
+  },
+});
