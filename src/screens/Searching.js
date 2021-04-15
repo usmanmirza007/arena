@@ -7,10 +7,17 @@ import images from '../constants/images'
 import styles from './../constants/styles';
 import Ican from 'react-native-vector-icons/AntDesign';
 import SpinnerScreen from './../components/SpinnerScreen'
+
 const Searching = () => {
 
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true)
+
+  searchByLatLng = () => {
+    const reference = database().ref('ScheduleMatches');
+
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: '#151314' }}>
       <StatusBar

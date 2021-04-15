@@ -29,6 +29,7 @@ const HomeScreen = () => {
     const currentUser = await GoogleSignin.getCurrentUser();
     setGoogleUser(currentUser)
   };
+  
   return (
     <View style={{ flex: 1, backgroundColor: '#231F20' }}>
       <StatusBar

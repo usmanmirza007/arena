@@ -22,9 +22,10 @@ import {
   statusCodes,
 } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import StadiumLocation from "./src/screens/stadiumLocation";
+import MyRequest from "./src/screens/MyRequest";
 
 const Stack = createStackNavigator();
-
 
 const AuthStack = () => (
   <Stack.Navigator initialRouteName={'Welcome'} headerMode={'none'}>
@@ -95,6 +96,21 @@ const HomeStack = () => (
         animationEnabled: false
       }}
     />
+    <Stack.Screen 
+      name="stadiumLocation"
+      component={StadiumLocation}
+      options={{
+        animationEnabled: false
+      }}
+    />
+
+    <Stack.Screen 
+      name="MyRequest"
+      component={MyRequest}
+      options={{
+        animationEnabled: false
+      }}
+    />
 
   </Stack.Navigator>
 );
@@ -135,9 +151,7 @@ export default () => {
     const currentUser = await GoogleSignin.getCurrentUser();
     setGoogleUser(currentUser)
   };
-  console.log('name', googleUser?.user.name);
   const updateUserStatus = () => {
-    console.log('user');
     if ((auth().currentUser && auth().currentUser.email && auth().currentUser.displayName) || (googleUser?.user.name && googleUser?.user.email)) {
       setUserToken(true)
     } else if (!auth().currentUser) {
@@ -166,7 +180,6 @@ export default () => {
             password
           )
           if (response && response.user) {
-            console.log('res', response.user);
             callback()
           }
         } catch (e) {
@@ -232,7 +245,6 @@ export default () => {
           setUserToken(null);
         } 
         else if (auth().currentUser) {
-          console.log('firebase');
           auth()
             .signOut().then(() => {
               ToastAndroid.show("Sign Out", ToastAndroid.SHORT);
@@ -246,7 +258,6 @@ export default () => {
         else {
             try {
               // const token = await AsyncStorage.getItem('Token');
-              console.log('google');
               await GoogleSignin.revokeAccess();
               await GoogleSignin.signOut();
               setIsLoading(false);
