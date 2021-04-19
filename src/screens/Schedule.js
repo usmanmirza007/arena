@@ -99,7 +99,6 @@ class Schedule extends Component {
   }
 
   onChange = (event, selectedDate) => {
-    var time
     const currentTime = selectedDate || time;
     this.setState({
       time: currentTime,

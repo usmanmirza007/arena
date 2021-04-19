@@ -33,8 +33,6 @@ class AcceptMatch extends React.Component {
         ref.once('value').then((snapshot) => {
             snapshot.forEach(element => {
                 if (element.key === this.state.user._user.uid) {
-
-                } else {
                     element.forEach(e => {
                         e.val().schedule.forEach(item => {
                             if (item.status === 'Requested') {
@@ -51,6 +49,8 @@ class AcceptMatch extends React.Component {
                     }, () => {
                         // console.log('data', this.state.data)
                     })
+                } else {
+                   
                 }
             });
         });
@@ -71,11 +71,9 @@ class AcceptMatch extends React.Component {
                                 schedule: allData
                             }).then(() => {
                                 this.getData()
-                                if (status == 'Accept') {
-                                    this.props.navigation.navigate('stadiumLocation', {
-                                        fullItem: item
-                                    })
-                                }
+                                this.props.navigation.navigate('stadiumLocation', {
+                                    fullItem: item
+                                })
                             })
                         }
                     }
@@ -90,7 +88,7 @@ class AcceptMatch extends React.Component {
                 return (
                     <View style={{ marginTop: 15, flexDirection: 'row', borderStyle: 'dotted', borderWidth: 2, borderColor: '#5C5B5C', justifyContent: 'space-between', borderRadius: 15, backgroundColor: '#2C2829', marginHorizontal: 25, padding: 35 }}>
                         <View>
-                            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Requested by:{+ item.requestedBy.toLowerCase() === this.state.user._user.displayName.toLowerCase() ? 'You' : item.requestedBy}</Text>
+                            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Requested by:{ + item.requestedBy.toLowerCase() === this.state.user._user.displayName.toLowerCase() ? 'You' : item.requestedBy}</Text>
                             <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Stadium Name: ' + item.stadiumName}</Text>
                             <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Day: ' + item.day}</Text>
                             <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Start time: ' + item.strtTime}</Text>
@@ -98,7 +96,7 @@ class AcceptMatch extends React.Component {
                         </View>
 
                         <View>
-                            <TouchableOpacity style={{ backgroundColor: '#39E8A7', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}
+                            <TouchableOpacity onPress={() => { navigation.navigate('AcceptMatch') }} style={{ backgroundColor: '#39E8A7', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}
                                 onPress={() => {
                                     this.sendRequest(item, 'Accept')
                                 }}
@@ -106,7 +104,7 @@ class AcceptMatch extends React.Component {
                                 <Text style={{ color: '#fff' }}>Accept</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{ backgroundColor: 'red', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}
+                            <TouchableOpacity onPress={() => { navigation.navigate('AcceptMatch') }} style={{ backgroundColor: 'red', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}
                                 onPress={() => {
                                     this.sendRequest(item, 'Reject')
                                 }}
@@ -128,30 +126,31 @@ class AcceptMatch extends React.Component {
                 return (
                     <View style={{ marginTop: 15, flexDirection: 'row', borderStyle: 'dotted', borderWidth: 2, borderColor: '#5C5B5C', justifyContent: 'space-between', borderRadius: 15, backgroundColor: '#2C2829', marginHorizontal: 25, padding: 35 }}>
                         <View>
-                            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Accepted by: {+ item.requestedBy.toLowerCase().includes(this.state.user._user.displayName.toLowerCase()) ? 'You' : item.requestedBy}</Text>
+                            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>Accepted by: { + item.requestedBy.toLowerCase().includes(this.state.user._user.displayName.toLowerCase()) ? 'You' : item.requestedBy}</Text>
                             <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Stadium Name: ' + item.stadiumName}</Text>
                             <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Day: ' + item.day}</Text>
                             <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Start time: ' + item.strtTime}</Text>
                             <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'End time: ' + item.endTime}</Text>
                         </View>
 
-                        <View style={{flexDirection: 'column', alignSelf: 'center'}}>
-                            <View style={{ backgroundColor: '#39E8A7', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}
+                        <View>
+                            <TouchableOpacity onPress={() => { navigation.navigate('AcceptMatch') }} style={{ backgroundColor: '#39E8A7', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}
                                 onPress={() => {
-                                    // this.sendRequest(item, 'Accept')
-                                    // alert(this.state.user._user.displayName)
+                                    this.props.navigation.navigate('stadiumLocation', {
+                                        fullItem: item
+                                    })
                                 }}
                             >
-                                <Text style={{ color: '#fff' }}>Accepted</Text>
-                            </View>
+                                <Text style={{ color: '#fff' }}>Map</Text>
+                            </TouchableOpacity>
 
-                            {/* <TouchableOpacity onPress={() => { navigation.navigate('AcceptMatch') }} style={{ backgroundColor: 'red', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}
+                            <TouchableOpacity onPress={() => { navigation.navigate('AcceptMatch') }} style={{ backgroundColor: 'red', width: 70, height: 40, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginTop: 20 }}
                                 onPress={() => {
                                     this.sendRequest(item, 'Rejected')
                                 }}
                             >
                                 <Text style={{ color: '#fff' }}>Decline</Text>
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                         </View>
 
                     </View>
@@ -175,7 +174,7 @@ class AcceptMatch extends React.Component {
                         <View style={{ height: 80, width: '100%', flexDirection: 'row' }}>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <TouchableOpacity style={{ width: 100, height: 40, backgroundColor: 'red', justifyContent: 'center', alignItems: 'center' }}
-                                    onPress={() => this.setState({ isTrue: true }, () => this.getData())}
+                                    onPress={() => this.setState({ isTrue: true },()=>this.getData())}
                                 >
                                     <Text>Requests</Text>
                                 </TouchableOpacity>
@@ -183,7 +182,7 @@ class AcceptMatch extends React.Component {
 
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <TouchableOpacity style={{ width: 100, height: 40, backgroundColor: 'red', justifyContent: 'center', alignItems: 'center' }}
-                                    onPress={() => this.setState({ isTrue: false }, () => this.getData())}
+                                    onPress={() => this.setState({ isTrue: false },()=>this.getData())}
                                 >
                                     <Text>Accepted</Text>
                                 </TouchableOpacity>
