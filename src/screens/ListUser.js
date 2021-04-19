@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, ActivityIndicator, TextInput, ImageBackground, StatusBar, Alert } from "react-native";
+import { Text, TouchableOpacity, View, ActivityIndicator, TextInput, ImageBackground, StatusBar } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from '@react-navigation/native';
@@ -30,32 +30,39 @@ class ListUser extends React.Component {
     var mArray = []
     const ref = database().ref('ScheduleMatches');
     ref.once('value').then((snapshot) => {
-      snapshot.forEach(element => {
-        
-        let allData = element.child(this.state.stadiumName).val().schedule;
-        this.setState({loading: false})
-        for (let i=0; i<allData.length; i++) {
-          for (let j=0; j<this.state.getData.length; j++) {
-            if (allData[i].userId === this.state.user._user.uid){
-
-            }
-            else {
-              if (allData[i].strtTime === this.state.getData[j].strtTime && allData[i].endTime === this.state.getData[j].endTime 
-                && allData[i].stdLat === this.state.getData[j].stdLat && allData[i].stdLng === this.state.getData[j].stdLng 
-                && allData[i].day === this.state.getData[j].day && allData[i].status === 'Pending') {
-                  mArray.push(allData[i])
+      if (JSON.stringify(snapshot) != 'null') {
+        snapshot.forEach(element => {
+          try {
+            // if (element.child(this.state.stadiumName).key === this.state.stadiumName) {
+              let allData = element.child(this.state.stadiumName).val().schedule;
+              for (let i = 0; i < allData.length; i++) {
+                for (let j = 0; j < this.state.getData.length; j++) {
+                  if (allData[i].userId === this.state.user._user.uid) {
+    
+                  }
+                  else {
+                    if (allData[i].strtTime === this.state.getData[j].strtTime && allData[i].endTime === this.state.getData[j].endTime
+                      && allData[i].stdLat === this.state.getData[j].stdLat && allData[i].stdLng === this.state.getData[j].stdLng
+                      && allData[i].day === this.state.getData[j].day && allData[i].status === 'Pending') {
+                      mArray.push(allData[i])
+                    }
+                  }
+                }
               }
-            }
+              this.setState({
+                data: mArray,
+                loading: false
+              }, () => {
+                console.log('data', allData)
+              })
+            // }
+          }catch(error) {
           }
-         
-        }
-        this.setState({
-          data: mArray,
-          loading: false
-        }, () => {
-          console.log('data', allData)
-        })
-      });
+        });
+      }
+      else {
+        this.setState({loading: false})
+      }
     });
   }
 
@@ -73,7 +80,6 @@ class ListUser extends React.Component {
                 schedule: allData
               }).then(() => {
                 this.getData()
-                 
               })
             }
           }
@@ -104,7 +110,9 @@ class ListUser extends React.Component {
       <Text style={{color: '#fff', fontSize: 20,alignSelf: 'center', marginTop: 20}}>Send Request</Text>
         {this.state.data.map((item, index) => {
           return (
-            <View style={{ marginTop: 15, flexDirection: 'row', borderStyle: 'dotted', borderWidth: 2, borderColor: '#5C5B5C', justifyContent: 'space-between', borderRadius: 15, backgroundColor: '#2C2829', marginHorizontal: 25, padding: 35 }}>
+            <View style={{ marginTop: 15, flexDirection: 'row', borderStyle: 'dotted', borderWidth: 2, borderColor: '#5C5B5C', justifyContent: 'space-between', borderRadius: 15, backgroundColor: '#2C2829', marginHorizontal: 25, padding: 35 }}
+              key={item.userId}
+            >
               <View>
                 <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Name: '+item.userName}</Text>
                 <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>{'Stadium Name: '+item.stadiumName}</Text>
